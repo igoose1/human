@@ -35,7 +35,7 @@
  */
 long power (long number, int pow)
 {
-    return pow > 0 ? power(number * number, pow - 1) : number;
+    return pow > 0 ? number * power(number, pow - 1) : number;
 }
 
 /*
@@ -111,7 +111,7 @@ int main (int argc, char **argv)
     /* get the number. if there is not, strtold will return 0 */
     number = strtold(argv[argc - 1], NULL);
 
-    if (number < 0) {
+    if (number <= 0) {
         errx(EXIT_FAILURE, "I ain't gonna do it. Deal with it.");
     }
 
