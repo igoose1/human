@@ -28,6 +28,13 @@
 
 #define DEFAULT_SCALE 0
 
+/* dumb user is dumb.. */
+void usage (char *progname)
+{
+    printf("usage: %s [-hkmgt] <number>\n", progname);
+    return; /* void */
+}
+
 /* 
  * calculate a power of number
  * disclaimers: return no more than a "long" so use wisely...
@@ -97,10 +104,7 @@ int main (int argc, char **argv)
     /* only switches are use to force factorization */
     while ((ch = getopt(argc, argv, "hkmgt")) != -1) {
         switch (ch) {
-            case 'h':
-                printf("usage: %s [-hkmgt] <number>\n", argv[0]);
-                exit(0);
-                break;
+            case 'h': usage(argv[0]); exit(0); break;
             case 't': fac ='T'; break;
             case 'g': fac ='G'; break;
             case 'm': fac ='M'; break;
