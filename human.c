@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <limits.h>
+#include <string.h>
 
 #define TERA 1099511627776
 #define GIGA 1073741824
@@ -28,11 +29,16 @@
 
 #define DEFAULT_SCALE 0
 
-/* dumb user is dumb.. */
+/*
+ * Help, I need somebody 
+ * Help, not just anybody 
+ * Help, you know I need someone 
+ * Help!
+ *
+ */
 void usage (char *progname)
 {
-    printf("usage: %s [-hkmgt] <number>\n", progname);
-    return; /* void */
+    printf("usage: %s [-hbkmgt] <number>\n", progname);
 }
 
 /* 
@@ -42,7 +48,7 @@ void usage (char *progname)
  */
 long power (long number, int pow)
 {
-    return pow > 0 ? number * power(number, pow - 1) : number;
+    return pow > 0 ? number * power(number, pow - 1) : 1;
 }
 
 /*
@@ -83,12 +89,12 @@ double humanize (double number, char factor)
 {
     int pow = 0;
 
-    /* cascading switch. note a lack of "break" statements */
+    /* cascading switch. note the lack of "break" statements */
     switch (factor) {
         case 'T' : pow++;
         case 'G' : pow++;
         case 'M' : pow++;
-        case 'K' : break;
+        case 'K' : pow++; break;
         default  : return number;
     }    
 
@@ -98,32 +104,42 @@ double humanize (double number, char factor)
 
 int main (int argc, char **argv)
 {
-    char ch, fac = 0;
+    char ch, pow = 0, fac = 0;
     double number = 0;
 
     /* only switches are use to force factorization */
-    while ((ch = getopt(argc, argv, "hkmgt")) != -1) {
+    while ((ch = getopt(argc, argv, "hbkmgt")) != -1) {
         switch (ch) {
             case 'h': usage(argv[0]); exit(0); break;
-            case 't': fac ='T'; break;
-            case 'g': fac ='G'; break;
-            case 'm': fac ='M'; break;
-            case 'k': fac ='K'; break;
+            case 't': fac = 'T'; break;
+            case 'g': fac = 'G'; break;
+            case 'm': fac = 'M'; break;
+            case 'k': fac = 'K'; break;
+            case 'b': fac = 'B'; break;
         }
     }
 
-    /* get the number. if there is not, strtold will return 0 */
+    switch (argv[argc - 1][strnlen(argv[argc - 1],32) - 1]) {
+        case 'T': pow++;
+        case 'G': pow++;
+        case 'M': pow++;
+        case 'K': pow++;
+        case 'B': argv[argc - 1][strnlen(argv[argc - 1],32) - 1] = 0;
+    }
+
+    /* get the number and convert it to bytes. If there is none, strtold will return 0 */
     number = strtold(argv[argc - 1], NULL);
+    number *= power(1024, pow);
 
     if (number <= 0) {
-        errx(EXIT_FAILURE, "I ain't gonna do it. Deal with it.");
+        errx(EXIT_FAILURE, "I ain't gonna do that. Deal with it.");
     }
 
     /* use explicit factorization. otherwise, guess the best one */
     fac = fac > 0 ? fac : factorize(number);
 
     /* actually print the result, isn't that what we're here for after all ? */
-    printf("%.*f%c\n", getscale(), humanize(number, fac), fac);
+    printf("%.*f%c\n", getscale(), humanize(number, fac), fac == 'B' ? 0 : fac);
 
     return 0;
 }

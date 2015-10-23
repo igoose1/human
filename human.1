@@ -3,7 +3,7 @@
 human \- output a number in human-readable format
 .SH SYNOPSIS
 .B human
-.RI [ \-hkmgt ] <number>
+.RI [ \-hbkmgt ] <number>
 .SH DESCRIPTION
 .PP
 .B human
@@ -12,8 +12,8 @@ takes the number given as an argument, and output it in a human readable format.
 .B \-h
 Displays a help text
 .TP
-.B \-k, -m, -g, -t
-Force output in, respectively, KiB, MiB, GiB or TiB.
+.B \-b, -k, -m, -g, -t
+Force output in, respectively, Bytes, KiB, MiB, GiB or TiB.
 .SH ENVIRONMENT
 .B SCALE
 The special variable SCALE will allow you to choose how many numbers you want after the decimal point.
@@ -35,6 +35,12 @@ The special variable SCALE will allow you to choose how many numbers you want af
 .EX
 \fBhuman \fR-m 1234567890
 1177M
+.EE
+.TP
+\(buConvert a number from Mib to bytes
+.EX
+\fBhuman \fR-b 128M
+134217728
 .EE
 .SH REPORTING BUGS
 If you encounter any bugs, feel free to report them at \fIwilly@mailoo.org\fR
