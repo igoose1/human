@@ -11,11 +11,11 @@ LDFLAGS =
 .PHONY : all clean install uninstall
 
 .c.o:
-	@echo -e "CC $<"
+	@echo "CC $<"
 	@${CC} -c ${CFLAGS} $< -o $@
 
 human: human.o
-	@echo -e "LD human"
+	@echo "LD human"
 	@${LD} $^ -o $@ ${LDFLAGS}
 
 all : human human.1
