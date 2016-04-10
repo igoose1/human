@@ -18,9 +18,9 @@
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
 #include <limits.h>
 #include <string.h>
+#include "arg.h"
 
 #define TERA 1099511627776
 #define GIGA 1073741824
@@ -102,33 +102,25 @@ double humanize (double number, char factor)
     return number /= power(1024, pow);
 }
 
-int main (int argc, char **argv)
+/*
+ * finally print a number in human-readable format,
+ *
+ */
+int human(char* s, char fac)
 {
-    char ch, pow = 0, fac = 0;
+    int pow = 0;
     double number = 0;
 
-    /* only switches are use to force factorization */
-    while ((ch = getopt(argc, argv, "hbkmgt")) != -1) {
-        switch (ch) {
-            case 'h': usage(argv[0]); exit(0); break;
-            case 't': fac = 'T'; break;
-            case 'g': fac = 'G'; break;
-            case 'm': fac = 'M'; break;
-            case 'k': fac = 'K'; break;
-            case 'b': fac = 'B'; break;
-        }
-    }
-
-    switch (argv[argc - 1][strnlen(argv[argc - 1],32) - 1]) {
+    switch (s[strnlen(s, LINE_MAX) - 1]) {
         case 'T': pow++;
         case 'G': pow++;
         case 'M': pow++;
         case 'K': pow++;
-        case 'B': argv[argc - 1][strnlen(argv[argc - 1],32) - 1] = 0;
+        case 'B': s[strnlen(s, 32) - 1] = 0;
     }
 
     /* get the number and convert it to bytes. If there is none, strtold will return 0 */
-    number = strtold(argv[argc - 1], NULL);
+    number  = strtold(s, NULL);
     number *= power(1024, pow);
 
     if (number <= 0) {
@@ -140,6 +132,39 @@ int main (int argc, char **argv)
 
     /* actually print the result, isn't that what we're here for after all ? */
     printf("%.*f%c\n", getscale(), humanize(number, fac), fac == 'B' ? 0 : fac);
+    return 0;
+}
+
+int main (int argc, char **argv)
+{
+    char fac = 0;
+    char *argv0, *in;
+
+    /* only switches are use to force factorization */
+    ARGBEGIN {
+        case 'h': usage(argv0); exit(0); break;
+        case 't': fac = 'T'; break;
+        case 'g': fac = 'G'; break;
+        case 'm': fac = 'M'; break;
+        case 'k': fac = 'K'; break;
+        case 'b': fac = 'B'; break;
+        default: break;
+    } ARGEND;
+
+    if (argc > 0) {
+        /* consume numbers from arguments, if any */
+        while (argc --> 0) {
+            human(*argv++, fac);
+	}
+    } else {
+	/* read numbers from stdin if no args, one per line */
+        in = malloc(LINE_MAX);
+        while (fgets(in, LINE_MAX, stdin) != NULL) {
+            /* overwrite the '\n' */
+            in[strnlen(in, LINE_MAX) - 1] = 0;
+            human(in, fac);
+        }
+    }
 
     return 0;
 }
