@@ -138,7 +138,7 @@ int human(char* s, char fac)
 int main (int argc, char **argv)
 {
     char fac = 0;
-    char *argv0, *in;
+    char *argv0, in[LINE_MAX];
 
     /* only switches are use to force factorization */
     ARGBEGIN {
@@ -158,7 +158,6 @@ int main (int argc, char **argv)
 	}
     } else {
 	/* read numbers from stdin if no args, one per line */
-        in = malloc(LINE_MAX);
         while (fgets(in, LINE_MAX, stdin) != NULL) {
             /* overwrite the '\n' */
             in[strnlen(in, LINE_MAX) - 1] = 0;
