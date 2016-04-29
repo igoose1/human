@@ -21,7 +21,7 @@
 #include <string.h>
 #include "arg.h"
 
-#define EXA 1152921504606846976
+#define EXA  1152921504606846976
 #define PETA 1125899906842624
 #define TERA 1099511627776
 #define GIGA 1073741824
@@ -74,7 +74,7 @@ int getscale()
  */
 char factorize (double number)
 {
-    return number >= EXA ? 'E' :
+    return number >= EXA  ? 'E' :
            number >= PETA ? 'P' :
            number >= TERA ? 'T' :
            number >= GIGA ? 'G' :
@@ -139,12 +139,11 @@ int human(char* s, char fac)
     fac = fac > 0 ? fac : factorize(number);
 
     /* actually print the result, isn't that what we're here for after all ? */
-    if (fac == 'B' || fac == '\0') {
-        printf("%.*f\n", getscale(), humanize(number, fac));
+    printf("%.*f", getscale(), humanize(number, fac));
+    if (fac && fac != 'B') {
+        putchar(fac);
     }
-    else {
-        printf("%.*f%c\n", getscale(), humanize(number, fac), fac);
-    }
+    putchar('\n');
     return 0;
 }
 
