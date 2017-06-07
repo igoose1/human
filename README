@@ -1,14 +1,21 @@
-╻ ╻╻ ╻┏┳┓┏━┓┏┓╻
-┣━┫┃ ┃┃┃┃┣━┫┃┗┫
-╹ ╹┗━┛╹ ╹╹ ╹╹ ╹
-             -- by z3bra
-========================
+human
+=====
 
-Human is a small program which translate numbers into a human readable format.
-By default, it tries to detect the best factorisation, but you can force its
-output.
+Human is a small program which outpus numbers into a human readable
+format. By default, it tries to detect the best factorisation, but you
+can force its output.
 
-You can adjust the number of decimals by with the `SCALE` environment variable.
+Installation
+------------
+The following commands would build and install the program just fine:
+
+	$ make
+	# make install
+
+Usage
+-----
+You can adjust the number of decimals with the `SCALE` environment
+variable.
 
     # convert 123456 to the best human factorisation
     human 123456
@@ -25,4 +32,9 @@ You can adjust the number of decimals by with the `SCALE` environment variable.
     SCALE=6 human -g 123M
     0.120117G
 
-Well, that's it (and that's enough !)
+Well, that's it (and that's enough !). For more informations, see the
+human(1) manpage.
+
+License
+-------
+See the LICENSE file provided with this software
