@@ -3,6 +3,7 @@
  *                    Version 2, December 2004
  *
  * Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+ * Copyright (C) 2023 Oskar Sharipov <oskarsh[at]riseup[dot]net>
  *
  * Everyone is permitted to copy and distribute verbatim or modified
  * copies of this license document, and changing it is allowed as double
@@ -126,8 +127,9 @@ int human(char* s, char fac)
         case 'B': s[strnlen(s, LINE_MAX) - 1] = 0;
     }
 
+    char *tail;
     /* get the number and convert it to bytes. If there is none, strtold will return 0 */
-    number  = strtold(s, NULL);
+    number  = strtold(s, &tail);
     number *= power(1024, pow);
 
     if (number < 0) {
@@ -143,7 +145,7 @@ int human(char* s, char fac)
     if (fac && fac != 'B') {
         putchar(fac);
     }
-    putchar('\n');
+    printf("%s\n", tail);
     return 0;
 }
 
